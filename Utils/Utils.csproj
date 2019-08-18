@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>RAK.Lib.Utils</AssemblyName>
+    <RootNamespace>RAK.Lib.Utils</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="UniversalTypeConverter" Version="2.0.0" />
+  </ItemGroup>
+
+</Project>
