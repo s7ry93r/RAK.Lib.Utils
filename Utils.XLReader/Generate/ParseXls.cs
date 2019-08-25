@@ -13,6 +13,8 @@ namespace RAK.Lib.Utils.XLReader.Generate
 
         public DataSet xlData { get; protected set; } 
 
+        public List<XlsColumn> xlsColumns { get; protected set; }
+
         public ParseXls(string xlPath)
         {
             this.xlPath = xlPath;
@@ -38,7 +40,10 @@ namespace RAK.Lib.Utils.XLReader.Generate
             var t0 = xlData.Tables[0];
             for(int i = 0; i < t0.Rows.Count; i++)
             {
-
+                for(int j = 0; j < t0.Columns.Count; j++)
+                {
+                    var srch = from 
+                }
             }
         }
 
@@ -97,7 +102,7 @@ namespace RAK.Lib.Utils.XLReader.Generate
         }
     }
 
-    public class XlsColumns
+    public class XlsColumn
     {
         public int Position { get; set; }
         public string Name { get; set; }
