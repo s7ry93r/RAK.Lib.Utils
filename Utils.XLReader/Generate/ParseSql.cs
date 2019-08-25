@@ -4,17 +4,18 @@ using System.Data;
 using System.Text;
 using System.Text.RegularExpressions;
 using TB.ComponentModel;
+using System.IO;
 //using UTC = TB.ComponentModel.UniversalTypeConverter;
 
 namespace RAK.Lib.Utils.XLReader.Generate
 {
-    public class ParseSql
+    internal class ParseSql
     {
-        public string createSQL { get; set; }
+        public string CreateSql { get; protected set; }
 
         public List<SqlColumns> cols { get; set; }
 
-        private Dictionary<string, SqlDbType> dataTypeWords = new Dictionary<string, SqlDbType>()
+        protected Dictionary<string, SqlDbType> dataTypeWords = new Dictionary<string, SqlDbType>()
         {
             {@"image", SqlDbType.Image},
             {@"binary",SqlDbType.Binary},
@@ -40,22 +41,23 @@ namespace RAK.Lib.Utils.XLReader.Generate
             {@"money", SqlDbType.Money},
         };
 
-        private string colRegex =
-            @".*\[([\w_ \$\-]*)\]\s*\[([\w]*)\]\s*(\(([\d ,MAX]*)\))?\s*(NOT NULL|NULL)?\s*(IDENTITY\s*\(([\d ,]*)\))?,?";
+        protected string colRegex =
+            @".*\[([\w_ \$\-]*)\]\s*\[?([\w]*)\]?\s*(\(([\d ,MAX]*)\))?\s*(NOT NULL|NULL)\s*(IDENTITY\s*\(([\d ,]*)\))?,?";
 
-        private string pkRegex = @".*CONSTRAINT\s{0,4}[\w\. _\[\]]*\s{0,4}PRIMARY\s{1,2}KEY[.\s\w]*\([.\s]*\[?([\w\. _]*)\]?[.\w\s]*\)";
+        protected string pkRegex = @".*CONSTRAINT\s{0,4}[\w\. _\[\]]*\s{0,4}PRIMARY\s{1,2}KEY[.\s\w]*\([.\s]*\[?([\w\. _]*)\]?[.\w\s]*\)";
 
-        public ParseSql(string createSql)
+        public ParseSql(string createSqlPath)
         {
-            this.createSQL = createSql;
+            this.CreateSql = (new StreamReader(createSqlPath)).ReadToEnd();
             this.cols = new List<SqlColumns>();
+            Parse();
         }
 
         public void Parse()
         {
-            var matches = Regex.Matches(this.createSQL, this.colRegex, RegexOptions.IgnoreCase);
+            var matches = Regex.Matches(this.CreateSql, this.colRegex, RegexOptions.IgnoreCase);
 
-            var pkMatch = Regex.Match(this.createSQL, this.pkRegex, RegexOptions.IgnoreCase);
+            var pkMatch = Regex.Match(this.CreateSql, this.pkRegex, RegexOptions.IgnoreCase);
             string pk = null;
             if (pkMatch.Success)
             {
@@ -92,7 +94,7 @@ namespace RAK.Lib.Utils.XLReader.Generate
             }
         }
 
-        internal int? getLength(string g4)
+        protected int? getLength(string g4)
         {
             var m = Regex.Match(g4.Trim(), @"^(\d{1,5}|max)$", RegexOptions.IgnoreCase);
             int? len = null;
@@ -103,7 +105,7 @@ namespace RAK.Lib.Utils.XLReader.Generate
             return len;
         }
 
-        internal Tuple<int?, int?> getPrecisionAndScale(string g4)
+        protected Tuple<int?, int?> getPrecisionAndScale(string g4)
         {
             var m = Regex.Match(g4.Trim(), @"^(\d{1,3})\s{0,2},\s{0,2}(\d{1,3})$");
             int? prec = null;
