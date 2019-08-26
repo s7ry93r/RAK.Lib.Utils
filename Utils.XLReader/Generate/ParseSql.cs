@@ -9,11 +9,11 @@ using System.IO;
 
 namespace RAK.Lib.Utils.XLReader.Generate
 {
-    internal class ParseSql
+    public class ParseSql
     {
         public string CreateSql { get; protected set; }
 
-        public List<SqlColumns> cols { get; set; }
+        public List<SqlColumn> cols { get; set; }
 
         protected Dictionary<string, SqlDbType> dataTypeWords = new Dictionary<string, SqlDbType>()
         {
@@ -49,7 +49,7 @@ namespace RAK.Lib.Utils.XLReader.Generate
         public ParseSql(string createSqlPath)
         {
             this.CreateSql = (new StreamReader(createSqlPath)).ReadToEnd();
-            this.cols = new List<SqlColumns>();
+            this.cols = new List<SqlColumn>();
             Parse();
         }
 
@@ -77,7 +77,7 @@ namespace RAK.Lib.Utils.XLReader.Generate
 
                 this.cols.Add(
                     
-                    new SqlColumns()
+                    new SqlColumn()
                     {
                         Position =  i++,
                         Name = match.Groups[1].Value,

@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using ExcelDataReader;
 using System.Data;
+using System.Linq;
 
 namespace RAK.Lib.Utils.XLReader.Generate
 {
@@ -18,6 +19,7 @@ namespace RAK.Lib.Utils.XLReader.Generate
         public ParseXls(string xlPath)
         {
             this.xlPath = xlPath;
+            this.xlsColumns = new List<XlsColumn>();
 
             var extension = (new FileInfo(xlPath)).Extension;
             if (extension.ToLower() == ".xls" || extension.ToLower() == ".xlsx")
@@ -42,7 +44,25 @@ namespace RAK.Lib.Utils.XLReader.Generate
             {
                 for(int j = 0; j < t0.Columns.Count; j++)
                 {
-                    var srch = from 
+                    var c = (from x in this.xlsColumns where x.Name == t0.Columns[j].ColumnName select x).FirstOrDefault();
+                    if (c == null)
+                    {
+                        var xlc = new XlsColumn()
+                        {
+                            Name = t0.Columns[j].ColumnName,
+                            Position = j,
+                            PossibleDataTypes = new List<Type>(),
+                            Nullable = string.IsNullOrEmpty(t0.Columns[j].ToString()) ? true : false,
+                            HasDupes = false,
+                        };
+                        xlc.PossibleDataTypes.Add(t0.Columns[j].DataType);
+                        xlc.PossibleDataTypes.Add("".GetType());
+                        this.xlsColumns.Add(xlc);
+                    }
+                    else
+                    {
+
+                    }
                 }
             }
         }
@@ -100,15 +120,5 @@ namespace RAK.Lib.Utils.XLReader.Generate
                 }
             }
         }
-    }
-
-    public class XlsColumn
-    {
-        public int Position { get; set; }
-        public string Name { get; set; }
-        public bool Nullable { get; set; }
-        public List<Type> PossibleDataTypes { get; set; }
-        public bool HasDupes { get; set; }
-        public SqlColumns MatchedSqlColumns { get; set; }
     }
 }

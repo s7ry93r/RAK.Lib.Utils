@@ -2,7 +2,7 @@
 
 namespace RAK.Lib.Utils.XLReader.Generate
 {
-    public class SqlColumns
+    public class SqlColumn
     {
         public int Position { get; set; }
         public string Name { get; set; }
