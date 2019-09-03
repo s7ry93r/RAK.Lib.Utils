@@ -8,7 +8,7 @@ namespace RAK.Lib.Utils.XLReader.Generate
         public int Position { get; set; }
         public string Name { get; set; }
         public bool Nullable { get; set; }
-        public List<Type> PossibleDataTypes { get; set; }
+        public PossibleTypesForColumn PossibleTypes { get; set; }
         public bool HasDupes { get; set; }
         public SqlColumn MatchedSqlColumns { get; set; }
     }

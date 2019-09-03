@@ -51,17 +51,20 @@ namespace RAK.Lib.Utils.XLReader.Generate
                         {
                             Name = t0.Columns[j].ColumnName,
                             Position = j,
-                            PossibleDataTypes = new List<Type>(),
+                            PossibleTypes = new PossibleTypesForColumn(),
                             Nullable = string.IsNullOrEmpty(t0.Columns[j].ToString()) ? true : false,
                             HasDupes = false,
                         };
-                        xlc.PossibleDataTypes.Add(t0.Columns[j].DataType);
-                        xlc.PossibleDataTypes.Add("".GetType());
+                        xlc.PossibleTypes.NewRowVal(i, t0.Columns[j].ToString());
+
+                        //xlc.PossibleTypes.Add(t0.Columns[j].DataType);
+                        //xlc.PossibleTypes.Add("".GetType());
                         this.xlsColumns.Add(xlc);
                     }
                     else
                     {
-
+                        //c.HasDupes =
+                        c.PossibleTypes.NewRowVal(i, t0.Columns[j].ToString());
                     }
                 }
             }

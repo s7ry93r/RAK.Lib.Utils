@@ -4,7 +4,7 @@ using System.IO;
 
 namespace RAK.Lib.Utils.XLReader.Test
 {
-    public class TestXL
+    public class TestSQLParsing
     {
         private string getCWD()
         {
